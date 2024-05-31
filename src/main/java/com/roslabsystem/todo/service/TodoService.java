@@ -26,51 +26,37 @@ public class TodoService {
     TodoMapper todoMapper;
 
     public TodoResponse createTodo(TodoRequest todoRequest) {
-        Optional<TodoEntity> todo = todoRepository.findByTodoName(todoRequest.todoName());
-        if (todo.isPresent())  {
-            throw new AlreadyExistException("todo");
-        }
+        todoRepository.findByTodoName(todoRequest.todoName()).orElseThrow(() -> new AlreadyExistException("todo"));
+
         TodoEntity todoEntity = todoRepository.save(todoMapper.requestToEntity(todoRequest));
         return todoMapper.entityToResponse(todoEntity);
     }
 
     public ResponseEntity<?> deleteById(Long id) {
-        Optional<TodoEntity> todo = todoRepository.findById(id);
-        if (todo.isEmpty()) {
-            throw new NotFoundException("todo with this id");
-        }
+        TodoEntity todo = todoRepository.findById(id).orElseThrow(() -> new AlreadyExistException("todo with id: " + id));
 
-        taskRepository.deleteAllInBatch(todo.get().getTasks());
+        taskRepository.deleteAllInBatch(todo.getTasks());
         todoRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public ResponseEntity<?> deleteByName(String todoName) {
-        Optional<TodoEntity> todo = todoRepository.findByTodoName(todoName);
-        if (todo.isEmpty()) {
-            throw new NotFoundException("todo with this name");
-        }
+        TodoEntity todo = todoRepository.findByTodoName(todoName).orElseThrow(() -> new NotFoundException("todo with name: " + todoName));
 
-        taskRepository.deleteAllInBatch(todo.get().getTasks());
-        todoRepository.deleteById(todo.get().getId());
+        taskRepository.deleteAllInBatch(todo.getTasks());
+        todoRepository.deleteById(todo.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public TodoResponse getTodoByTodoById(Long id) {
-        Optional<TodoEntity> todo = todoRepository.findById(id);
-        if (todo.isEmpty()) {
-            throw new NotFoundException("todo with this id");
-        }
+        TodoEntity todo = todoRepository.findById(id).orElseThrow(() -> new NotFoundException("todo with id: " + id));
 
-        return todoMapper.entityToResponse(todo.get());
+        return todoMapper.entityToResponse(todo);
     }
 
     public TodoResponse getTodoByName(String todoName) {
-        Optional<TodoEntity> todo = todoRepository.findByTodoName(todoName);
-        if (todo.isEmpty()) {
-            throw new NotFoundException("todo with this name");
-        }
+        TodoEntity todo = todoRepository.findByTodoName(todoName).orElseThrow(() -> new NotFoundException("todo with name: " + todoName));
 
-        return todoMapper.entityToResponse(todo.get());
+        return todoMapper.entityToResponse(todo);
     }
 }

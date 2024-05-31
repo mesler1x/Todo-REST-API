@@ -9,6 +9,7 @@ import com.roslabsystem.todo.domain.TaskEntity;
 import com.roslabsystem.todo.domain.TodoEntity;
 import com.roslabsystem.todo.service.mapper.TaskMapper;
 import com.roslabsystem.todo.service.mapper.TodoMapper;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -43,49 +44,39 @@ public class TaskService {
 
 
     public TodoResponse completeTaskById(Long id) {
-        Optional<TaskEntity> task = taskRepository.findById(id);
-        if (task.isEmpty()) {
-            throw new NotFoundException("task with this id");
-        }
+        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new NotFoundException("task with this id"));
 
         taskRepository.updateTaskByIdSetIsCompletedToTrue(id);
-        task.get().setIsCompleted(true);
+        task.setIsCompleted(true);
 
-        return todoMapper.entityToResponse(task.get().getTodo());
+        return todoMapper.entityToResponse(task.getTodo());
     }
 
 
     public TodoResponse unCompleteById(Long id) {
-        Optional<TaskEntity> task = taskRepository.findById(id);
-        if (task.isEmpty()) {
-            throw new NotFoundException("task with this id");
-        }
+        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new NotFoundException("task with this id"));
 
         taskRepository.updateTaskByIdSetIsCompletedToFalse(id);
-        task.get().setIsCompleted(false);
+        task.setIsCompleted(false);
 
-        return todoMapper.entityToResponse(task.get().getTodo());
+        return todoMapper.entityToResponse(task.getTodo());
     }
 
+    @Transactional
     public TodoResponse deleteById(Long id) {
-        Optional<TaskEntity> task = taskRepository.findById(id);
-        if (task.isEmpty()) {
-            throw new NotFoundException("task with this id");
-        }
+        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new NotFoundException("task with this id"));
 
         taskRepository.deleteById(id);
-        Long taskId = task.get().getTodo().getId();
+        Long taskId = task.getTodo().getId();
 
         return todoMapper.entityToResponse(todoRepository.findById(taskId).get());
     }
 
+    @Transactional
     public TodoResponse deleteByRequest(TodoAndTaskRequest todoAndTaskRequest) {
-        Optional<TodoEntity> todo = todoRepository.findByTodoName(todoAndTaskRequest.todoName());
-        if (todo.isEmpty()) {
-            throw new NotFoundException("todo");
-        }
+        TodoEntity todo = todoRepository.findByTodoName(todoAndTaskRequest.todoName()).orElseThrow(() -> new NotFoundException("todo"));
 
-        Set<TaskEntity> tasks = todo.get().getTasks();
+        Set<TaskEntity> tasks = todo.getTasks();
         Long id = null;
         for(TaskEntity taskEntity : tasks) {
             if (taskEntity.getDescription().equalsIgnoreCase(todoAndTaskRequest.taskName())) {
