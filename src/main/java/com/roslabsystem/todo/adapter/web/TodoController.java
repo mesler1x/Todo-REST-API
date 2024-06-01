@@ -25,27 +25,32 @@ public class TodoController {
     TodoService todoService;
 
     @PostMapping
-    public TodoResponse create(@AuthenticationPrincipal UserEntity user, @Valid @RequestBody TodoRequest todoRequest ) {
+    public TodoResponse create(@AuthenticationPrincipal UserEntity user,
+                               @Valid @RequestBody TodoRequest todoRequest ) {
         return todoService.createTodo(user, todoRequest);
     }
 
     @GetMapping("/{id}")
-    public TodoResponse get(@AuthenticationPrincipal UserEntity user, @PathVariable Long id) {
+    public TodoResponse get(@AuthenticationPrincipal UserEntity user,
+                            @PathVariable Long id) {
         return todoService.getTodoById(user, id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@AuthenticationPrincipal UserEntity user, @PathVariable Long id) {
+    public ResponseEntity<?> delete(@AuthenticationPrincipal UserEntity user,
+                                    @PathVariable Long id) {
         return new ResponseEntity<>(todoService.deleteById(user, id), HttpStatus.OK);
     }
 
     @DeleteMapping
-    public ResponseEntity<?> delete(@AuthenticationPrincipal UserEntity user, @Valid @NotBlank(message = "todo name should not be null") @RequestParam String todoName) {
+    public ResponseEntity<?> delete(@AuthenticationPrincipal UserEntity user,
+                                    @Valid @NotBlank(message = "todo name should not be null") @RequestParam String todoName) {
         return new ResponseEntity<>(todoService.deleteByName(user, todoName), HttpStatus.OK);
     }
 
     @GetMapping
-    public TodoResponse getTodo(@AuthenticationPrincipal UserEntity user, @Valid @NotBlank(message = "todo name should not be null") @RequestParam String todoName) {
+    public TodoResponse getTodo(@AuthenticationPrincipal UserEntity user,
+                                @Valid @NotBlank(message = "todo name should not be null") @RequestParam String todoName) {
         return todoService.getTodoByName(user, todoName);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -19,12 +20,12 @@ import java.util.List;
 public class CommonAdvice extends ResponseEntityExceptionHandler {
     private final String VALIDATION_ERROR = "validation error";
 
-    @ExceptionHandler
+    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<BasicErrorResponse> handleNotFound(NotFoundException ex) {
         return new ResponseEntity<>(new BasicErrorResponse(ex.getCode(), ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(AlreadyExistException.class)
     public ResponseEntity<BasicErrorResponse> handleAlreadyExist(AlreadyExistException ex) {
         return new ResponseEntity<>(new BasicErrorResponse(ex.getCode(), ex.getMessage()), HttpStatus.CONFLICT);
     }
@@ -38,5 +39,10 @@ public class CommonAdvice extends ResponseEntityExceptionHandler {
                         fieldError.getField(),
                         fieldError.getDefaultMessage())).toList();
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return new ResponseEntity<>(new BasicErrorResponse("EXPECTATION_FAILED", "file larger than 5 MB"), HttpStatus.EXPECTATION_FAILED);
     }
 }

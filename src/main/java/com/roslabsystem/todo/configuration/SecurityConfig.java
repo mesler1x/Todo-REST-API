@@ -29,7 +29,7 @@ public class SecurityConfig {
             "/registration"
     };
     private static final String[] USER_URI = {
-            "/task/**", "/todo/**"
+            "/task/**", "/todo/**", "/file/**", "/**"
     };
 
     private static final String[] ADMIN_URI = {
