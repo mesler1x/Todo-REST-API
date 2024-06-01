@@ -17,4 +17,4 @@
     "registry-mirrors": ["https://mirror.gcr.io", "https://daocloud.io", "https://c.163.com/", "https://registry.docker-cn.com"]
 }
 ```
-2) ```sudo systemctl restart```
+2) ```sudo systemctl restart docker```
