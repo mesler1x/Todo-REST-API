@@ -2,7 +2,6 @@ package com.roslabsystem.todo.service;
 
 import com.roslabsystem.todo.adapter.repository.FileRepository;
 import com.roslabsystem.todo.adapter.repository.TaskRepository;
-import com.roslabsystem.todo.adapter.web.dto.request.FileCreateRequest;
 import com.roslabsystem.todo.adapter.web.dto.response.FileResponse;
 import com.roslabsystem.todo.adapter.web.exceptions.AlreadyExistException;
 import com.roslabsystem.todo.adapter.web.exceptions.NotFoundException;
@@ -22,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

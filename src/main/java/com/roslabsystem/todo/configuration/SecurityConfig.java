@@ -28,12 +28,9 @@ public class SecurityConfig {
     private static final String[] PERMITTED_URI = {
             "/registration"
     };
-    private static final String[] USER_URI = {
-            "/task/**", "/todo/**", "/file/**", "/**"
-    };
 
-    private static final String[] ADMIN_URI = {
-            "/**"
+    private static final String[] USER_URI = {
+            "/task/**", "/todo/**", "/file/**"
     };
 
     @Bean
@@ -48,8 +45,6 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(USER_URI)
                         .hasAuthority(UserRole.ROLE_USER.name())
-                        .requestMatchers(ADMIN_URI)
-                        .hasAuthority(UserRole.ROLE_ADMIN.name())
                 ).httpBasic(
                         Customizer.withDefaults()
                 ).build();

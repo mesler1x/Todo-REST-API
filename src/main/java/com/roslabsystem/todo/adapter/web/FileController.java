@@ -1,15 +1,12 @@
 package com.roslabsystem.todo.adapter.web;
 
-import com.roslabsystem.todo.adapter.web.dto.request.FileCreateRequest;
 import com.roslabsystem.todo.adapter.web.dto.response.FileResponse;
 import com.roslabsystem.todo.domain.user.UserEntity;
 import com.roslabsystem.todo.service.FileService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
