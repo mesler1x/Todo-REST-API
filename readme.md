@@ -8,3 +8,13 @@
 3) ```docker build -t todo-backend .```
 
 4) ```docker compose up -d```
+
+### Если не работает Docker
+
+1) В файл /etc/docker/daemon.json вставить:
+```
+{
+    "registry-mirrors": ["https://mirror.gcr.io", "https://daocloud.io", "https://c.163.com/", "https://registry.docker-cn.com"]
+}
+```
+2) ```sudo systemctl restart```
