@@ -1,4 +1,4 @@
-package com.roslabsystem.todo.adapter.web.dto;
+package com.roslabsystem.todo.adapter.web.dto.response;
 
 import java.util.List;
 

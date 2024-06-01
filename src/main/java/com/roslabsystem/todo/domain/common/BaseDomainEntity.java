@@ -13,7 +13,7 @@ import java.util.Objects;
 public abstract class BaseDomainEntity {
     @Id
     @SequenceGenerator(name = "TODO_SEQ", sequenceName = "TODO_SEQ",
-            allocationSize = 1, initialValue = 1)
+            allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TODO_SEQ")
     Long id;
 

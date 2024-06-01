@@ -1,7 +1,7 @@
 package com.roslabsystem.todo.adapter.web;
 
-import com.roslabsystem.todo.adapter.web.dto.RegistrationRequest;
-import com.roslabsystem.todo.adapter.web.dto.RegistrationResponse;
+import com.roslabsystem.todo.adapter.web.dto.request.RegistrationRequest;
+import com.roslabsystem.todo.adapter.web.dto.response.RegistrationResponse;
 import com.roslabsystem.todo.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

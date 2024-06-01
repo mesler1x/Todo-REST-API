@@ -30,7 +30,7 @@ public class TodoEntity extends BaseDomainEntity {
     public record TodoContext(String todoName) {
     }
 
-    public void setTasks(TaskEntity task) {
+    public void addTask(TaskEntity task) {
         this.tasks.add(task);
     }
 }

@@ -1,7 +1,7 @@
 package com.roslabsystem.todo.adapter.web;
 
-import com.roslabsystem.todo.adapter.web.dto.TodoRequest;
-import com.roslabsystem.todo.adapter.web.dto.TodoResponse;
+import com.roslabsystem.todo.adapter.web.dto.request.TodoRequest;
+import com.roslabsystem.todo.adapter.web.dto.response.TodoResponse;
 import com.roslabsystem.todo.service.TodoService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class TodoController {
 
     @GetMapping("/{id}")
     public TodoResponse get(@PathVariable Long id) {
-        return todoService.getTodoByTodoById(id);
+        return todoService.getTodoById(id);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        return todoService.deleteById(id);
+        return new ResponseEntity<>(todoService.deleteById(id), HttpStatus.OK);
     }
 
     @DeleteMapping

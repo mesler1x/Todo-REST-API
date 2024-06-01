@@ -1,7 +1,7 @@
 package com.roslabsystem.todo.service.mapper;
 
-import com.roslabsystem.todo.adapter.web.dto.TaskResponse;
-import com.roslabsystem.todo.adapter.web.dto.TodoAndTaskRequest;
+import com.roslabsystem.todo.adapter.web.dto.response.TaskResponse;
+import com.roslabsystem.todo.adapter.web.dto.request.TodoAndTaskRequest;
 import com.roslabsystem.todo.domain.TaskEntity;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ public class TaskMapper {
     }
 
     public TaskEntity requestToEntity(TodoAndTaskRequest taskRequest) {
-        TaskEntity.TaskContext context = new TaskEntity.TaskContext(taskRequest.taskName());
+        TaskEntity.TaskContext context = new TaskEntity.TaskContext(taskRequest.taskDescription());
         return new TaskEntity(context);
     }
 }

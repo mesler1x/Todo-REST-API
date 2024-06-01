@@ -2,8 +2,8 @@ package com.roslabsystem.todo.service;
 
 import com.roslabsystem.todo.adapter.repository.TaskRepository;
 import com.roslabsystem.todo.adapter.repository.TodoRepository;
-import com.roslabsystem.todo.adapter.web.dto.TodoRequest;
-import com.roslabsystem.todo.adapter.web.dto.TodoResponse;
+import com.roslabsystem.todo.adapter.web.dto.request.TodoRequest;
+import com.roslabsystem.todo.adapter.web.dto.response.TodoResponse;
 import com.roslabsystem.todo.adapter.web.exceptions.AlreadyExistException;
 import com.roslabsystem.todo.adapter.web.exceptions.NotFoundException;
 import com.roslabsystem.todo.domain.TodoEntity;
@@ -14,8 +14,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +46,7 @@ public class TodoService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public TodoResponse getTodoByTodoById(Long id) {
+    public TodoResponse getTodoById(Long id) {
         TodoEntity todo = todoRepository.findById(id).orElseThrow(() -> new NotFoundException("todo with id: " + id));
 
         return todoMapper.entityToResponse(todo);

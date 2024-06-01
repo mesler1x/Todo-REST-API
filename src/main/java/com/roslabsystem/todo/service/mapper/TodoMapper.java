@@ -1,7 +1,7 @@
 package com.roslabsystem.todo.service.mapper;
 
-import com.roslabsystem.todo.adapter.web.dto.TodoRequest;
-import com.roslabsystem.todo.adapter.web.dto.TodoResponse;
+import com.roslabsystem.todo.adapter.web.dto.request.TodoRequest;
+import com.roslabsystem.todo.adapter.web.dto.response.TodoResponse;
 import com.roslabsystem.todo.domain.TodoEntity;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

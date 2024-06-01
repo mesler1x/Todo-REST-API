@@ -1,11 +1,14 @@
 package com.roslabsystem.todo.adapter.web;
 
-import com.roslabsystem.todo.adapter.web.dto.TodoAndTaskRequest;
-import com.roslabsystem.todo.adapter.web.dto.TodoResponse;
+import com.roslabsystem.todo.adapter.web.dto.request.TodoAndTaskRequest;
+import com.roslabsystem.todo.adapter.web.dto.request.UpdateTaskRequest;
+import com.roslabsystem.todo.adapter.web.dto.response.TodoResponse;
 import com.roslabsystem.todo.service.TaskService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,23 +24,20 @@ public class TaskController {
         return taskService.createTask(todoAndTaskRequest);
     }
 
-    @PatchMapping("/complete/{id}")
-    public TodoResponse completeTaskById(@PathVariable Long id) {
-        return taskService.completeTaskById(id);
-    }
-
-    @PatchMapping("/unComplete/{id}")
-    public TodoResponse unCompleteTaskById(@PathVariable Long id) {
-        return taskService.unCompleteById(id);
+    @PatchMapping
+    public TodoResponse updateTask(@RequestBody UpdateTaskRequest updateTaskRequest) {
+        return taskService.updateTask(updateTaskRequest);
     }
 
     @DeleteMapping("/{id}")
-    public TodoResponse delete(@PathVariable Long id) {
-        return taskService.deleteById(id);
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        taskService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping
-    public TodoResponse delete(@RequestBody TodoAndTaskRequest todoAndTaskRequest) {
-        return taskService.deleteByRequest(todoAndTaskRequest);
+    public ResponseEntity<?> delete(@RequestBody TodoAndTaskRequest todoAndTaskRequest) {
+        taskService.deleteByRequest(todoAndTaskRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

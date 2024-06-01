@@ -2,8 +2,9 @@ package com.roslabsystem.todo.service;
 
 import com.roslabsystem.todo.adapter.repository.TaskRepository;
 import com.roslabsystem.todo.adapter.repository.TodoRepository;
-import com.roslabsystem.todo.adapter.web.dto.TodoAndTaskRequest;
-import com.roslabsystem.todo.adapter.web.dto.TodoResponse;
+import com.roslabsystem.todo.adapter.web.dto.request.TodoAndTaskRequest;
+import com.roslabsystem.todo.adapter.web.dto.request.UpdateTaskRequest;
+import com.roslabsystem.todo.adapter.web.dto.response.TodoResponse;
 import com.roslabsystem.todo.adapter.web.exceptions.NotFoundException;
 import com.roslabsystem.todo.domain.TaskEntity;
 import com.roslabsystem.todo.domain.TodoEntity;
@@ -15,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -28,67 +28,44 @@ public class TaskService {
     TodoMapper todoMapper;
 
     public TodoResponse createTask(TodoAndTaskRequest todoAndTaskRequest) {
-        Optional<TodoEntity> todo = todoRepository.findByTodoName(todoAndTaskRequest.todoName());
-        if (todo.isEmpty()) {
-            throw new NotFoundException("todo");
-        }
+        TodoEntity todo = todoRepository.findByTodoName(todoAndTaskRequest.todoName()).orElseThrow(() ->
+                new NotFoundException(String.format("todo with name %s", todoAndTaskRequest.todoName())));
 
-        TodoEntity todoEntity = todo.get();
         TaskEntity taskEntity = taskMapper.requestToEntity(todoAndTaskRequest);
-        taskEntity.setTodo(todoEntity);
+        taskEntity.setTodo(todo);
         TaskEntity saved = taskRepository.save(taskEntity);
-        todoEntity.setTasks(saved);
+        //todo.addTask(saved);
 
-        return todoMapper.entityToResponse(todoEntity);
+        return todoMapper.entityToResponse(todo);
     }
 
 
-    public TodoResponse completeTaskById(Long id) {
-        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new NotFoundException("task with this id"));
+    public TodoResponse updateTask(UpdateTaskRequest updateTaskRequest) {
+        TaskEntity task = taskRepository.findById(updateTaskRequest.id()).orElseThrow(() ->
+                new NotFoundException("task with this id"));
 
-        taskRepository.updateTaskByIdSetIsCompletedToTrue(id);
-        task.setIsCompleted(true);
-
-        return todoMapper.entityToResponse(task.getTodo());
-    }
-
-
-    public TodoResponse unCompleteById(Long id) {
-        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new NotFoundException("task with this id"));
-
-        taskRepository.updateTaskByIdSetIsCompletedToFalse(id);
-        task.setIsCompleted(false);
+        taskRepository.updateTaskByIdSetIsCompletedToTrue(updateTaskRequest.id(), updateTaskRequest.isCompleted());
+        //task.setIsCompleted(updateTaskRequest.isCompleted());
 
         return todoMapper.entityToResponse(task.getTodo());
     }
 
     @Transactional
-    public TodoResponse deleteById(Long id) {
-        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new NotFoundException("task with this id"));
+    public void deleteById(Long id) {
+        taskRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("task with this id"));
 
         taskRepository.deleteById(id);
-        Long taskId = task.getTodo().getId();
-
-        return todoMapper.entityToResponse(todoRepository.findById(taskId).get());
     }
 
     @Transactional
-    public TodoResponse deleteByRequest(TodoAndTaskRequest todoAndTaskRequest) {
-        TodoEntity todo = todoRepository.findByTodoName(todoAndTaskRequest.todoName()).orElseThrow(() -> new NotFoundException("todo"));
+    public void deleteByRequest(TodoAndTaskRequest todoAndTaskRequest) {
+        todoRepository.findByTodoName(todoAndTaskRequest.todoName()).orElseThrow(()
+                -> new NotFoundException("todo"));
 
-        Set<TaskEntity> tasks = todo.getTasks();
-        Long id = null;
-        for(TaskEntity taskEntity : tasks) {
-            if (taskEntity.getDescription().equalsIgnoreCase(todoAndTaskRequest.taskName())) {
-                id = taskEntity.getId();
-            }
-        }
+        TaskEntity taskEntity = taskRepository.findByDescription(todoAndTaskRequest.taskDescription()).orElseThrow(() ->
+                new NotFoundException(String.format("task with description %s", todoAndTaskRequest.taskDescription())));
 
-        if (id == null) {
-            throw new NotFoundException("task with this name");
-        }
-
-        taskRepository.deleteById(id);
-        return todoMapper.entityToResponse(todoRepository.findByTodoName(todoAndTaskRequest.todoName()).get());
+        taskRepository.deleteById(taskEntity.getId());
     }
 }

@@ -1,8 +1,8 @@
 package com.roslabsystem.todo.service;
 
 import com.roslabsystem.todo.adapter.repository.UserRepository;
-import com.roslabsystem.todo.adapter.web.dto.RegistrationRequest;
-import com.roslabsystem.todo.adapter.web.dto.RegistrationResponse;
+import com.roslabsystem.todo.adapter.web.dto.request.RegistrationRequest;
+import com.roslabsystem.todo.adapter.web.dto.response.RegistrationResponse;
 import com.roslabsystem.todo.adapter.web.exceptions.AlreadyExistException;
 import com.roslabsystem.todo.adapter.web.exceptions.NotFoundException;
 import com.roslabsystem.todo.domain.user.UserEntity;
