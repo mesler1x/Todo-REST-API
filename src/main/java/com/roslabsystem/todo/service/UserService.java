@@ -27,19 +27,15 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> person = userRepository.findByUsername(username);
 
-        if (person.isEmpty())
-            throw new NotFoundException(username);
-
-        return person.get();
+        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(username));
     }
 
     public RegistrationResponse registerUser(RegistrationRequest registrationRequest) {
         String encodePass = passwordEncoder.encode(registrationRequest.password());
         Optional<UserEntity> checkUsername = userRepository.findByUsername(registrationRequest.username());
         if (checkUsername.isPresent()) {
-            throw new AlreadyExistException("User");
+            throw new AlreadyExistException(String.format("user with username: '%s'", registrationRequest.username()));
         }
 
         UserEntity.Context context = new UserEntity.Context(

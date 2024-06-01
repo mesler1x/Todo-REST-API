@@ -7,6 +7,7 @@ import com.roslabsystem.todo.adapter.web.dto.response.TodoResponse;
 import com.roslabsystem.todo.adapter.web.exceptions.AlreadyExistException;
 import com.roslabsystem.todo.adapter.web.exceptions.NotFoundException;
 import com.roslabsystem.todo.domain.TodoEntity;
+import com.roslabsystem.todo.domain.user.UserEntity;
 import com.roslabsystem.todo.service.mapper.TodoMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,37 +24,47 @@ public class TodoService {
     TaskRepository taskRepository;
     TodoMapper todoMapper;
 
-    public TodoResponse createTodo(TodoRequest todoRequest) {
-        todoRepository.findByTodoName(todoRequest.todoName()).orElseThrow(() -> new AlreadyExistException("todo"));
+    public TodoResponse createTodo(UserEntity user, TodoRequest todoRequest) {
+        todoRepository.findByTodoNameAndUser(todoRequest.todoName(), user)
+                .ifPresent(
+                        existingTodo -> {throw new AlreadyExistException(String.format("todo with name %s", todoRequest.todoName()));}
+                );
 
-        TodoEntity todoEntity = todoRepository.save(todoMapper.requestToEntity(todoRequest));
+        TodoEntity todoEntity = todoMapper.requestToEntity(todoRequest);
+        todoEntity.setUser(user);
+        todoRepository.save(todoEntity);
+
         return todoMapper.entityToResponse(todoEntity);
     }
 
-    public ResponseEntity<?> deleteById(Long id) {
-        TodoEntity todo = todoRepository.findById(id).orElseThrow(() -> new AlreadyExistException("todo with id: " + id));
+    public ResponseEntity<?> deleteById(UserEntity user, Long id) {
+        TodoEntity todo = todoRepository.findByIdAndUser(id, user).orElseThrow(() ->
+                new NotFoundException(String.format("todo with id: %s and user id: %s", id, user.getId())));
 
         taskRepository.deleteAllInBatch(todo.getTasks());
         todoRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<?> deleteByName(String todoName) {
-        TodoEntity todo = todoRepository.findByTodoName(todoName).orElseThrow(() -> new NotFoundException("todo with name: " + todoName));
+    public ResponseEntity<?> deleteByName(UserEntity user, String todoName) {
+        TodoEntity todo = todoRepository.findByTodoNameAndUser(todoName, user).orElseThrow(() ->
+                new NotFoundException(String.format("todo with todo name: %s and user id: %s", todoName, user.getId())));
 
         taskRepository.deleteAllInBatch(todo.getTasks());
         todoRepository.deleteById(todo.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public TodoResponse getTodoById(Long id) {
-        TodoEntity todo = todoRepository.findById(id).orElseThrow(() -> new NotFoundException("todo with id: " + id));
+    public TodoResponse getTodoById(UserEntity user, Long id) {
+        TodoEntity todo = todoRepository.findByIdAndUser(id, user).orElseThrow(() ->
+                new NotFoundException(String.format("todo with id: %s and user id: %s", id, user.getId())));
 
         return todoMapper.entityToResponse(todo);
     }
 
-    public TodoResponse getTodoByName(String todoName) {
-        TodoEntity todo = todoRepository.findByTodoName(todoName).orElseThrow(() -> new NotFoundException("todo with name: " + todoName));
+    public TodoResponse getTodoByName(UserEntity user,String todoName) {
+        TodoEntity todo = todoRepository.findByTodoNameAndUser(todoName, user).orElseThrow(() ->
+                new NotFoundException(String.format("todo with todo name: %s and user id: %s", todoName, user.getId())));
 
         return todoMapper.entityToResponse(todo);
     }

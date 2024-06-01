@@ -1,13 +1,12 @@
 package com.roslabsystem.todo.domain;
 
 import com.roslabsystem.todo.domain.common.BaseDomainEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.roslabsystem.todo.domain.user.UserEntity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,11 +16,14 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Table(name = "todo")
+@Setter
 public class TodoEntity extends BaseDomainEntity {
     String todoName;
     @OneToMany(mappedBy = "todo", fetch = FetchType.EAGER)
     Set<TaskEntity> tasks;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    UserEntity user;
     public TodoEntity(TodoContext todoContext) {
         todoName = todoContext.todoName;
         tasks = new HashSet<>();
