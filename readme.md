@@ -9,6 +9,10 @@
 
 4) ```docker compose up -d```
 
+5) Для просмотра документации перейдите по енд поинту 
+```http://localhost:8080/swagger-ui/index.html```. 
+6) Авторизуйтесь под стартовым пользователем: username = ``sample``, password = ``sample``
+
 ### Если не работает Docker
 
 1) В файл /etc/docker/daemon.json вставить:
@@ -26,6 +30,7 @@
 * Spring Security
 * PostgreSql
 * Docker
+* OpenAPI
 
 ### Результаты интеграционных тестов
 ![img.png](img.png)

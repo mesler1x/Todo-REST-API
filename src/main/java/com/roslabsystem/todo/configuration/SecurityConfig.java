@@ -30,7 +30,7 @@ public class SecurityConfig {
     };
 
     private static final String[] USER_URI = {
-            "/task/**", "/todo/**", "/file/**"
+            "/**"
     };
 
     @Bean
