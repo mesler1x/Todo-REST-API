@@ -59,7 +59,7 @@ public class FileService {
     public FileResponse store(UserEntity user, Long id, MultipartFile file) throws IOException {
         TaskEntity task = taskRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new NotFoundException(String.format("task with id: %s and user with id: %s",
-                id, user.getId())));
+                        id, user.getId())));
 
         return store(user, task.getDescription(), file);
     }

@@ -24,6 +24,7 @@ public class TodoEntity extends BaseDomainEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     UserEntity user;
+
     public TodoEntity(TodoContext todoContext) {
         todoName = todoContext.todoName;
         tasks = new HashSet<>();

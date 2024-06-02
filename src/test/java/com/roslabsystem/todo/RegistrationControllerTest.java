@@ -57,8 +57,8 @@ public class RegistrationControllerTest {
     public void registrationTest_RegisterValidUserAndReturnsOkStatus() throws Exception {
         RegistrationRequest registrationRequest = new RegistrationRequest("sample", "sample");
         mockMvc.perform(post("http://localhost:8080/registration")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(registrationRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(registrationRequest)))
                 .andExpect(status().is2xxSuccessful());
 
         UserEntity user = userRepository.findByUsername(registrationRequest.username()).orElseThrow(() ->

@@ -22,7 +22,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     @Query("SELECT task FROM TaskEntity task JOIN task.todo todo JOIN todo.user user WHERE task.id = :id AND user = :user")
     Optional<TaskEntity> findByIdAndUser(@Param("id") Long id,
-                                         @Param("user")UserEntity user);
+                                         @Param("user") UserEntity user);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM TaskEntity task WHERE task.id = :id AND task.todo.user = :user")

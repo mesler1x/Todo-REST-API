@@ -1,7 +1,7 @@
 package com.roslabsystem.todo.service.mapper;
 
-import com.roslabsystem.todo.adapter.web.dto.response.TaskResponse;
 import com.roslabsystem.todo.adapter.web.dto.request.TodoAndTaskRequest;
+import com.roslabsystem.todo.adapter.web.dto.response.TaskResponse;
 import com.roslabsystem.todo.domain.TaskEntity;
 import org.springframework.stereotype.Component;
 

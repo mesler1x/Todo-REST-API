@@ -27,7 +27,9 @@ public class TodoService {
     public TodoResponse createTodo(UserEntity user, TodoRequest todoRequest) {
         todoRepository.findByTodoNameAndUser(todoRequest.todoName(), user)
                 .ifPresent(
-                        existingTodo -> {throw new AlreadyExistException(String.format("todo with name %s", todoRequest.todoName()));}
+                        existingTodo -> {
+                            throw new AlreadyExistException(String.format("todo with name %s", todoRequest.todoName()));
+                        }
                 );
 
         TodoEntity todoEntity = todoMapper.requestToEntity(todoRequest);
@@ -62,7 +64,7 @@ public class TodoService {
         return todoMapper.entityToResponse(todo);
     }
 
-    public TodoResponse getTodoByName(UserEntity user,String todoName) {
+    public TodoResponse getTodoByName(UserEntity user, String todoName) {
         TodoEntity todo = todoRepository.findByTodoNameAndUser(todoName, user).orElseThrow(() ->
                 new NotFoundException(String.format("todo with todo name: %s and user id: %s", todoName, user.getId())));
 

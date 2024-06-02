@@ -25,7 +25,7 @@ public class TodoController {
 
     @PostMapping
     public TodoResponse create(@AuthenticationPrincipal UserEntity user,
-                               @Valid @RequestBody TodoRequest todoRequest ) {
+                               @Valid @RequestBody TodoRequest todoRequest) {
         return todoService.createTodo(user, todoRequest);
     }
 

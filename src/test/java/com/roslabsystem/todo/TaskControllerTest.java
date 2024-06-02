@@ -1,6 +1,5 @@
 package com.roslabsystem.todo;
 
-import com.github.dockerjava.api.model.Task;
 import com.roslabsystem.todo.adapter.repository.TaskRepository;
 import com.roslabsystem.todo.adapter.repository.TodoRepository;
 import com.roslabsystem.todo.adapter.repository.UserRepository;
