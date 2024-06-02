@@ -55,7 +55,7 @@ public class RegistrationControllerTest {
     @Test
     @DisplayName("POST /registration register valid user and returns ok status")
     public void registrationTest_RegisterValidUserAndReturnsOkStatus() throws Exception {
-        RegistrationRequest registrationRequest = new RegistrationRequest("sample", "sample");
+        RegistrationRequest registrationRequest = new RegistrationRequest("sample1", "sample1");
         mockMvc.perform(post("http://localhost:8080/registration")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(registrationRequest)))
@@ -71,7 +71,7 @@ public class RegistrationControllerTest {
     @Test
     @DisplayName("POST /registration returns already exist exception")
     public void registrationTest_ReturnsAlreadyExistException() throws Exception {
-        RegistrationRequest registrationRequest = new RegistrationRequest("sample", "sample");
+        RegistrationRequest registrationRequest = new RegistrationRequest("sample1", "sample1");
         mockMvc.perform(post("http://localhost:8080/registration")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(registrationRequest)))
@@ -87,5 +87,4 @@ public class RegistrationControllerTest {
         assertThat(user).isNotNull();
         assertThat(user.getUsername()).isEqualTo(registrationRequest.username());
     }
-
 }
