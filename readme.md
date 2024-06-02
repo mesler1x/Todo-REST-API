@@ -18,3 +18,15 @@
 }
 ```
 2) ```sudo systemctl restart docker```
+
+### Описание стека
+* TestContainers
+* Spring DATA JPA
+* Spring Boot
+* Spring Security
+* PostgreSql
+* Docker
+
+### Результаты интеграционных тестов
+![img.png](img.png)
+

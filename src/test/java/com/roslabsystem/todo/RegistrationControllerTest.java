@@ -4,6 +4,8 @@ import com.roslabsystem.todo.adapter.repository.UserRepository;
 import com.roslabsystem.todo.adapter.web.dto.request.RegistrationRequest;
 import com.roslabsystem.todo.adapter.web.exceptions.NotFoundException;
 import com.roslabsystem.todo.domain.user.UserEntity;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -45,17 +47,45 @@ public class RegistrationControllerTest {
     }
 
 
+    @AfterEach
+    public void cleanUp() {
+        userRepository.deleteAll();
+    }
+
     @Test
-    public void registrationTest() throws Exception {
+    @DisplayName("POST /registration register valid user and returns ok status")
+    public void registrationTest_RegisterValidUserAndReturnsOkStatus() throws Exception {
         RegistrationRequest registrationRequest = new RegistrationRequest("sample", "sample");
         mockMvc.perform(post("http://localhost:8080/registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(registrationRequest)))
                 .andExpect(status().is2xxSuccessful());
 
-        UserEntity user = userRepository.findByUsername(registrationRequest.username()).orElseThrow(() -> new NotFoundException("test"));
+        UserEntity user = userRepository.findByUsername(registrationRequest.username()).orElseThrow(() ->
+                new NotFoundException(String.format("user with username: '%s' in registration controller test", registrationRequest.username())));
 
         assertThat(user).isNotNull();
         assertThat(user.getUsername()).isEqualTo(registrationRequest.username());
     }
+
+    @Test
+    @DisplayName("POST /registration returns already exist exception")
+    public void registrationTest_ReturnsAlreadyExistException() throws Exception {
+        RegistrationRequest registrationRequest = new RegistrationRequest("sample", "sample");
+        mockMvc.perform(post("http://localhost:8080/registration")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(registrationRequest)))
+                .andExpect(status().is2xxSuccessful());
+        mockMvc.perform(post("http://localhost:8080/registration")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(registrationRequest)))
+                .andExpect(status().is4xxClientError());
+
+        UserEntity user = userRepository.findByUsername(registrationRequest.username()).orElseThrow(() ->
+                new NotFoundException(String.format("user with username: '%s' in registration controller test", registrationRequest.username())));
+
+        assertThat(user).isNotNull();
+        assertThat(user.getUsername()).isEqualTo(registrationRequest.username());
+    }
+
 }
